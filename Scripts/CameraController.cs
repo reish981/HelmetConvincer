@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour
     private Space offsetPositionSpace = Space.Self;
 
     [SerializeField]
-    private bool lookAt = false;
+    private bool lookAt;
 
     private void Update()
     {
