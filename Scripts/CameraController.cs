@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour
     private Space offsetPositionSpace = Space.Self;
 
     [SerializeField]
-    private bool lookAt;
+    public bool lookAt;
 
     private void Update()
     {
@@ -30,13 +30,15 @@ public class CameraController : MonoBehaviour
         }
 
         // compute position
-        if (offsetPositionSpace == Space.Self)
+        transform.position = target.position + offsetPosition;
+
+        if (lookAt)
         {
-            transform.position = target.TransformPoint(offsetPosition);
+            transform.position = target.position + offsetPosition;
         }
         else
         {
-            transform.position = target.position + offsetPosition;
+            transform.position = target.TransformPoint(offsetPosition);
         }
 
         // compute rotation
@@ -46,9 +48,9 @@ public class CameraController : MonoBehaviour
         }
         else
         {
-            float moveHorizontal = Input.GetAxis("Horizontal");
+            //float moveHorizontal = Input.GetAxis("Horizontal");
 
-            transform.Rotate(Vector3.up, moveHorizontal * 40 * Time.deltaTime);
+            //transform.Rotate(Vector3.up, moveHorizontal * 40 * Time.deltaTime);
 
             float mouseHorizontal = Input.GetAxis("Mouse X");
             float mouseVertical = Input.GetAxis("Mouse Y");
