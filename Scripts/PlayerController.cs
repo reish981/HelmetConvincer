@@ -24,5 +24,11 @@ public class PlayerController : MonoBehaviour
         //transform.Rotate(new Vector3(-1, 0, 0));
 
         transform.Translate(0, 0, moveVertical * MoveSpeed * Time.deltaTime);
+
+        if (Input.GetKeyDown("space"))
+        {
+            transform.localEulerAngles = new Vector3(0, 0, 0);
+            transform.Translate(0, 2, 0);
+        }
     }
 }
