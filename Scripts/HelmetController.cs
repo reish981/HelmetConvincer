@@ -37,7 +37,7 @@ public class HelmetController : MonoBehaviour
 		// Actions performed when the spacebar is pressed
         if (space)
         {
-            dead = true;
+            dead = false;
         }
 
 		// Update animator

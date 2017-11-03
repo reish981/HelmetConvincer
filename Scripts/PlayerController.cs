@@ -15,19 +15,43 @@ public class PlayerController : MonoBehaviour
 //    public float torque;
 
     private Rigidbody rb;
-	/// <summary>The rb property represents the player.</summary>
+    /// <summary>The rb property represents the player.</summary>
     /// <value>The rb property represents the player object.</value>
 
-	/// <summary>Start is a method called at the scene's start.</summary>
+    public Transform rider;
+
+    private Vector3 riderOffsetPosition;
+
+    public int Map;
+
+    public Vector3[] MapArray;
+
+    
+
+    /// <summary>Start is a method called at the scene's start.</summary>
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        riderOffsetPosition = transform.position + rider.transform.position;
+        Respawn();
     }
+    void Respawn()
+    {
+        
 
-	/// <summary>FixedUpdate is a method called when the scene updates.</summary>
+        transform.localEulerAngles = new Vector3(0, 0, 0);
+        transform.Translate(0, 0.1f, 0);
+        rider.position = transform.position + new Vector3(0, 0.5f, -0.3f);
+        int mapSelection = Random.Range(0, 3);
+        Map++;
+        if (Map > 3)
+            Map = 0;
+        transform.position = MapArray[(4 * Map) + mapSelection];
+    }
+    /// <summary>FixedUpdate is a method called when the scene updates.</summary>
     void FixedUpdate()
     {
-		// Gets the value of the control axes
+        // Gets the value of the control axes
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
@@ -35,13 +59,13 @@ public class PlayerController : MonoBehaviour
         //transform.Rotate(new Vector3(-1, 0, 0));
 
         transform.Translate(0, 0, moveVertical * MoveSpeed * Time.deltaTime);
-//        rb.AddTorque(transform.up * torque);
+        //        rb.AddTorque(transform.up * torque);
 
-		// Actions performed when the spacebar is pressed
+        // Actions performed when the spacebar is pressed
         if (Input.GetKeyDown("space"))
         {
-            transform.localEulerAngles = new Vector3(0, 0, 0);
-            transform.Translate(0, 2, 0);
+            Respawn();
         }
     }
+    
 }
