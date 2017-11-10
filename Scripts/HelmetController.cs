@@ -25,6 +25,7 @@ public class HelmetController : MonoBehaviour
 
     public Text damageText;  // public if you want to drag your text object in there manually
     public Text speedText;
+    public Image deathScreen;
     float damageTracker;
 
     Vector3 lastPosition = Vector3.zero;
@@ -39,6 +40,7 @@ public class HelmetController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         animator = player.GetComponent<Animator>();
         damageTracker = 0;
+        deathScreen.color = new Color(0, 0, 0, 0);
     }
 
     /// <summary>Update is a method called when the scene updates.</summary>
@@ -56,6 +58,7 @@ public class HelmetController : MonoBehaviour
         {
             dead = false;
             damageTracker = 0;
+            deathScreen.color = new Color(0, 0, 0, 0);
         }
 
 		// Update animator
@@ -77,6 +80,7 @@ public class HelmetController : MonoBehaviour
         damageTracker += 60 * (transform.position - lastPosition).magnitude;
         if(damageTracker > 25)
             dead = true;
+        deathScreen.color = new Color(0, 0, 0, 255);
         //Destroy(col.gameObject);
-           }
+    }
 }
