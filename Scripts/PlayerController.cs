@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
         //transform.Rotate(new Vector3(-1, 0, 0));
 
         transform.Translate(0, 0, moveVertical * MoveSpeed * Time.deltaTime);
-        //        rb.AddTorque(transform.up * torque);
+        //        rb.AddTorque(transform.up * 10);
 
         // Actions performed when the spacebar is pressed
         if (Input.GetKeyDown("space"))

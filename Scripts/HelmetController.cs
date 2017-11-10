@@ -1,29 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 /// <summary>Determines how the helmet interacts with the scene and the player.</summary>
 public class HelmetController : MonoBehaviour
 {
     [SerializeField]
-    public Transform target;
-	/// <summary>The target property represents the helmet's target for orientation.</summary>
-    /// <value>The target property represents the value of the target object.</value>
-	
+    public Transform player;
+    /// <summary>The player property represents the helmet's target for orientation.</summary>
+    /// <value>The player property represents the value of the target object.</value>
+
     Animator animator;
 	/// <summary>The animator property represents the player.</summary>
     /// <value>The animator property represents the player's animator.</value>
 	
     public bool dead = false;
-	/// <summary>The dead property determines if the player has died.</summary>
+    /// <summary>The dead property determines if the player has died.</summary>
     /// <value>The dead property determines the state of the player's life</value>
 
-//    public Camera cam1;
-//    public Camera cam2;
+    private Rigidbody rb;
+    /// <summary>The rb property represents the helmet.</summary>
+    /// <value>The rb property represents the helmet object.</value>
 
-	/// <summary>Start is a method called at the scene's start.</summary>
+
+    public Text damageText;  // public if you want to drag your text object in there manually
+    public Text speedText;
+    float damageTracker;
+
+    Vector3 lastPosition = Vector3.zero;
+
+
+    //    public Camera cam1;
+    //    public Camera cam2;
+
+    /// <summary>Start is a method called at the scene's start.</summary>
     void Start()
     {
-        animator = target.GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
+        animator = player.GetComponent<Animator>();
+        damageTracker = 0;
     }
 
     /// <summary>Update is a method called when the scene updates.</summary>
@@ -33,11 +48,14 @@ public class HelmetController : MonoBehaviour
         float h = Input.GetAxis("Horizontal");
         float v = Input.GetAxis("Vertical");
         bool space = Input.GetKeyDown("space");
-		
-		// Actions performed when the spacebar is pressed
+
+
+        
+        // Actions performed when the spacebar is pressed
         if (space)
         {
             dead = false;
+            damageTracker = 0;
         }
 
 		// Update animator
@@ -45,11 +63,20 @@ public class HelmetController : MonoBehaviour
         //animator.SetFloat("Strafe", h);
         animator.SetBool("Death_b", dead);
     }
-	
-	/// <summary>OnCollisionEnter is a method called when the helmet collides with another rigidbody.</summary>
+
+    void FixedUpdate()
+    {
+        damageText.text = "DAMAGE: " + damageTracker.ToString();
+        speedText.text = "SPEED: " + 30 * (transform.position - lastPosition).magnitude;
+        lastPosition = transform.position;
+    }
+
+    /// <summary>OnCollisionEnter is a method called when the helmet collides with another rigidbody.</summary>
     void OnCollisionEnter(Collision col)
     {
-        dead = true;
+        damageTracker += 60 * (transform.position - lastPosition).magnitude;
+        if(damageTracker > 25)
+            dead = true;
         //Destroy(col.gameObject);
-    }
+           }
 }
