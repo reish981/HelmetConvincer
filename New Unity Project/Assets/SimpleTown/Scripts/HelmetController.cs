@@ -31,8 +31,8 @@ public class HelmetController : MonoBehaviour
     Vector3 lastPosition = Vector3.zero;
 
 
-    //    public Camera cam1;
-    //    public Camera cam2;
+        public Camera cam1;
+        public Camera cam2;
 
     /// <summary>Start is a method called at the scene's start.</summary>
     void Start()
@@ -41,6 +41,8 @@ public class HelmetController : MonoBehaviour
         animator = player.GetComponent<Animator>();
         damageTracker = 0;
         deathScreen.color = new Color(0, 0, 0, 0);
+        cam1.gameObject.SetActive(true);
+        cam2.gameObject.SetActive(false);
     }
 
     /// <summary>Update is a method called when the scene updates.</summary>
@@ -59,6 +61,8 @@ public class HelmetController : MonoBehaviour
             dead = false;
             damageTracker = 0;
             deathScreen.color = new Color(0, 0, 0, 0);
+            cam1.gameObject.SetActive(true);
+            cam2.gameObject.SetActive(false);
         }
 
 		// Update animator
@@ -79,8 +83,18 @@ public class HelmetController : MonoBehaviour
     {
         damageTracker += 60 * (transform.position - lastPosition).magnitude;
         if(damageTracker > 25)
-            dead = true;
+            StartCoroutine(deathTrigger());
+        
+        
+    }
+
+    IEnumerator deathTrigger()
+    {
+        dead = true;
+        cam1.gameObject.SetActive(false);
+        cam2.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(5);
         deathScreen.color = new Color(0, 0, 0, 255);
-        //Destroy(col.gameObject);
     }
 }
