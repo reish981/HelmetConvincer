@@ -95,6 +95,7 @@ public class HelmetController : MonoBehaviour
         cam2.gameObject.SetActive(true);
 
         yield return new WaitForSeconds(5);
-        deathScreen.color = new Color(0, 0, 0, 255);
+        if(dead)
+            deathScreen.color = new Color(0, 0, 0, 255);
     }
 }

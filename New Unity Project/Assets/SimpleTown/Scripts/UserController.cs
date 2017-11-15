@@ -26,6 +26,7 @@ public class UserController : MonoBehaviour
 
     public Vector3[] MapArray;
 
+    float distToGround;
     
 
     /// <summary>Start is a method called at the scene's start.</summary>
@@ -34,6 +35,7 @@ public class UserController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         riderOffsetPosition = transform.position + rider.transform.position;
         Respawn();
+        distToGround = GetComponent<Collider>().bounds.extents.y;
     }
     void Respawn()
     {
@@ -58,8 +60,15 @@ public class UserController : MonoBehaviour
         transform.Rotate(Vector3.up, moveHorizontal * TurnSpeed * Time.deltaTime);
         //transform.Rotate(new Vector3(-1, 0, 0));
 
-        transform.Translate(0, 0, moveVertical * MoveSpeed * Time.deltaTime);
-        //        rb.AddTorque(transform.up * 10);
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + Vector3.up, -Vector3.up, out hit))
+        {
+            print("Found an object - distance: " + hit.distance);
+            if(hit.distance < 1)
+                hit.distance = 1;
+            transform.Translate(0, 0, moveVertical * (MoveSpeed/hit.distance) * Time.deltaTime);
+            print("Found an object - distance: " + hit.distance);
+        }//        rb.AddTorque(transform.up * 10);
 
         // Actions performed when the spacebar is pressed
         if (Input.GetKeyDown("space"))
