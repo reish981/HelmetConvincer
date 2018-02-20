@@ -1,0 +1,75 @@
+//Esablishes digital pins 2 and 3 to be used as the RX and TX ports on the bluetooth shield
+#include <SoftwareSerial.h>
+SoftwareSerial bt(2,3); 
+
+//Define variables
+int posPin = A0;
+int spdPin = A1;
+int brake = 0;
+int i = 0;
+int x = 0;
+int y = 0;
+int point = 0;
+int data = 0;
+float loops = 0;
+float finalpos = 0, time = 0, time2 = 0, time3 = 0, tfinal = 0, speed = 0,  speed1 = 0;
+float posValue = 0;
+float spdValue = 0;
+
+void setup() {
+  //Define what pins are being used for inputs and output
+  pinMode(9, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT); 
+  //Set baud rate
+  bt.begin(9600);
+}
+
+void loop() {
+  x = 0;
+  //Reads in voltage values from sensors
+  posValue = analogRead(posPin);
+  //Loop for calculating sensor pick-ups
+  for(i = 0; i < 500; i++){
+     spdValue = analogRead(spdPin);
+     delay(4);
+      //When the sensor is over a pick-up, it's signal is grounded and we begin to cacluate how 
+      //many loops out of 500 the sensor is on the pick-up
+      if (spdValue < 10){
+      x = x + 1;
+  }
+  }
+
+  //Shutoff loop 
+  if(x > 450){
+    speed = 0;
+    goto data;
+  }
+        
+  //Calculated speed. .068 is a conversion factor calulated using the counted RPMs of the wheel and the perimeter of the wheel.
+  speed = (x * .068); //mph
+
+  data:
+  //Scaled final voltage value for the position sensor
+  finalpos = posValue * 5.00 * (.0009775171);
+  //This value is read in from the serial to trigger the brake activation loop
+  brake = bt.read();
+  
+  //All of these functions write to the wireless serial port on the bluetooth shield    
+  bt.print("Speed: "); 
+  bt.println(speed); 
+  bt.print("Position Voltage: ");  
+  bt.println(finalpos); 
+
+  //Brake loop
+  if(brake > 48){
+      //Sets the digital pin to output 5v for 5 seconds to enable the brake. LEDs are turned on and off for visual confirmation
+      //that the voltage is being output
+      digitalWrite(9,HIGH);
+      digitalWrite(LED_BUILTIN, HIGH);     
+      delay(3000);
+      digitalWrite(9,LOW);
+      digitalWrite(LED_BUILTIN, LOW);
+    }
+  //Resets brake value so the brake loop doesn't endlessly run  
+  brake = 0;
+  }   
